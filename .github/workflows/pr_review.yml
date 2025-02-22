@@ -21,7 +21,7 @@ jobs:
 
       - name: Run PR Review Bot
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}  # ✅ Use the PAT instead of default GITHUB_TOKEN
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}  # Assigns PR number
+          PR_NUMBER: ${{ github.event.pull_request.number }}
         run: python .github/scripts/review_pr.py
