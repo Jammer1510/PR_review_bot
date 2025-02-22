@@ -17,10 +17,11 @@ jobs:
           python-version: "3.9"
 
       - name: Install dependencies
-        run: pip install requests PyGithub openai  # ✅ Added `openai` here
+        run: pip install requests PyGithub openai  
 
       - name: Run PR Review Bot
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}  # Assigns PR number
         run: python .github/scripts/review_pr.py
