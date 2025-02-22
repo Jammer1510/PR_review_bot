@@ -23,27 +23,28 @@ def fetch_pr_details(pr_number):
     return pr
 
 def fetch_pr_diff(pr):
-    """Get PR diff as text."""
+    """Get PR diff as text and limit it to 500 characters to save tokens."""
     response = requests.get(pr.diff_url, headers={"Authorization": f"token {GITHUB_TOKEN}"})
     if response.status_code == 200:
-        return response.text
+        diff = response.text[:500]  # ✅ Limit diff length to reduce token usage
+        return diff
     else:
         print(f"Error fetching PR diff: {response.text}")
         return ""
 
 def analyze_code_with_openai(code_diff):
-    """Send PR code diff to OpenAI GPT-4o for review."""
+    """Send PR code diff to OpenAI GPT-4o for a concise review."""
     if not code_diff.strip():
         return "No code changes detected in this PR."
 
     try:
         response = client.chat.completions.create(
-            model="gpt-4o",  # ✅ Updated to GPT-4o
+            model="gpt-4o",
             messages=[
-                {"role": "system", "content": "You are an AI reviewing code changes in a pull request. Provide a constructive review with suggestions."},
-                {"role": "user", "content": f"Review the following GitHub Pull Request diff and provide code improvement suggestions:\n\n{code_diff}"}
+                {"role": "system", "content": "You are an AI reviewing code changes in a pull request. Keep the response concise."},
+                {"role": "user", "content": f"Review this GitHub PR diff and give brief improvement suggestions:\n\n{code_diff}"}
             ],
-            max_tokens=500  # Limit to 500 tokens to control cost
+            max_tokens=200  # ✅ Reduce response token limit to save cost
         )
         return response.choices[0].message.content.strip()
     except Exception as e:
@@ -56,22 +57,6 @@ def post_review_comment(pr, review_comment):
         print("Review comment posted successfully.")
     except Exception as e:
         print(f"Error posting review comment: {str(e)}")
-
-def approve_pr(pr):
-    """Approve PR if the review suggests it is good."""
-    try:
-        pr.create_review(event="APPROVE", body="LGTM! Approving this PR.")
-        print("PR Approved!")
-    except Exception as e:
-        print(f"Error approving PR: {str(e)}")
-
-def merge_pr(pr):
-    """Auto-merge the PR if it meets criteria."""
-    try:
-        pr.merge(commit_message="Auto-merging reviewed PR.")
-        print("PR Merged Successfully!")
-    except Exception as e:
-        print(f"Error merging PR: {str(e)}")
 
 def main():
     """Main function to process PRs."""
@@ -89,11 +74,6 @@ def main():
 
     review_comment = analyze_code_with_openai(code_diff)
     post_review_comment(pr, review_comment)
-
-    # If AI review includes "LGTM", approve & merge the PR
-    if "LGTM" in review_comment:
-        approve_pr(pr)
-        merge_pr(pr)
 
 if __name__ == "__main__":
     main()
