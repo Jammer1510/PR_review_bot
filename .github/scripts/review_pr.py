@@ -40,7 +40,7 @@ def analyze_code_with_openai(code_diff):
         response = client.chat.completions.create(
             model="gpt-4o",  # ✅ Updated to GPT-4o
             messages=[
-                {"role": "system", "content": "You are an AI reviewing code changes in a pull request."},
+                {"role": "system", "content": "You are an AI reviewing code changes in a pull request. Provide a constructive review with suggestions."},
                 {"role": "user", "content": f"Review the following GitHub Pull Request diff and provide code improvement suggestions:\n\n{code_diff}"}
             ],
             max_tokens=500  # Limit to 500 tokens to control cost
@@ -97,4 +97,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
