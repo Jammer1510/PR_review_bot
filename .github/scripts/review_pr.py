@@ -11,7 +11,7 @@ REPO_NAME = "PR_review_bot"  # Change this to your actual repository name
 
 # OpenAI API Key Setup
 openai.api_key = OPENAI_API_KEY
-client = openai.Client()  # ✅ Use the new OpenAI client
+client = openai.Client()  # ✅ Use OpenAI client
 
 # Initialize GitHub Client
 g = Github(GITHUB_TOKEN)
@@ -32,13 +32,13 @@ def fetch_pr_diff(pr):
         return ""
 
 def analyze_code_with_openai(code_diff):
-    """Send PR code diff to OpenAI GPT-4 Turbo for review."""
+    """Send PR code diff to OpenAI GPT-4o for review."""
     if not code_diff.strip():
         return "No code changes detected in this PR."
 
     try:
         response = client.chat.completions.create(
-            model="gpt-4-turbo",
+            model="gpt-4o",  # ✅ Updated to GPT-4o
             messages=[
                 {"role": "system", "content": "You are an AI reviewing code changes in a pull request."},
                 {"role": "user", "content": f"Review the following GitHub Pull Request diff and provide code improvement suggestions:\n\n{code_diff}"}
