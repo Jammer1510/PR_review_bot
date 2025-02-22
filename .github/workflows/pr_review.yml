@@ -17,7 +17,7 @@ jobs:
           python-version: "3.9"
 
       - name: Install dependencies
-        run: pip install requests github3.py
+        run: pip install requests PyGithub openai  # ✅ Added `openai` here
 
       - name: Run PR Review Bot
         env:
