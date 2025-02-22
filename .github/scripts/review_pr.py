@@ -11,6 +11,7 @@ REPO_NAME = "PR_review_bot"  # Change this to your actual repository name
 
 # OpenAI API Key Setup
 openai.api_key = OPENAI_API_KEY
+client = openai.Client()  # ✅ Use the new OpenAI client
 
 # Initialize GitHub Client
 g = Github(GITHUB_TOKEN)
@@ -36,7 +37,7 @@ def analyze_code_with_openai(code_diff):
         return "No code changes detected in this PR."
 
     try:
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="gpt-4-turbo",
             messages=[
                 {"role": "system", "content": "You are an AI reviewing code changes in a pull request."},
@@ -44,7 +45,7 @@ def analyze_code_with_openai(code_diff):
             ],
             max_tokens=500  # Limit to 500 tokens to control cost
         )
-        return response["choices"][0]["message"]["content"].strip()
+        return response.choices[0].message.content.strip()
     except Exception as e:
         return f"Error calling OpenAI API: {str(e)}"
 
