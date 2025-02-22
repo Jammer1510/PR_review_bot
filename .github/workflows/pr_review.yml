@@ -22,5 +22,5 @@ jobs:
       - name: Run PR Review Bot
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: python .github/scripts/review_pr.py
