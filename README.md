@@ -48,8 +48,10 @@ If AI review contains "LGTM", the bot auto-approves & merges the PR.
 
 1️⃣ Fork & Clone the Repository
 
+```
 git clone https://github.com/Jammer1510/PR_review_bot.git
 cd PR_review_bot
+```
 
 
 2️⃣ Set Up Python Virtual Environment
