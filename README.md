@@ -106,11 +106,12 @@ response = client.chat.completions.create(
 ## 🧪 Testing Locally
 
 You can manually trigger a review by setting environment variables:
-
+```
 export GITHUB_TOKEN="your-personal-access-token"
 export OPENAI_API_KEY="your-openai-api-key"
 export PR_NUMBER=1  # Replace with an actual PR number
 python .github/scripts/review_pr.py
+```
 
 
 ## 🚀 Deployment
